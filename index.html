@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>🎯 مسابقة المفرد والمثنى والجمع</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comic Sans MS', 'Tahoma', sans-serif; }
+body {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #a1c4fd 100%);
+  overflow-x: hidden;
+  padding: 20px;
+  position: relative;
+}
+.container { max-width: 1100px; margin: auto; position: relative; z-index: 2; }
+h1 {
+  text-align: center;
+  color: #fff;
+  font-size: 2.5em;
+  text-shadow: 3px 3px 0 #ff6b9d, 6px 6px 10px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+.screen { display: none; animation: fadeIn 0.5s; }
+.screen.active { display: block; }
+@keyframes fadeIn { from {opacity:0; transform:scale(0.9);} to {opacity:1; transform:scale(1);} }
+
+.name-box {
+  background: #fff;
+  border-radius: 30px;
+  padding: 40px;
+  max-width: 500px;
+  margin: 40px auto;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  text-align: center;
+  border: 5px dashed #ff6b9d;
+}
+.name-box h2 { color: #ff6b9d; font-size: 2em; margin-bottom: 20px; }
+.name-box p { color: #666; font-size: 1.2em; margin-bottom: 20px; }
+.name-box input {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.5em;
+  border: 3px solid #4ecdc4;
+  border-radius: 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  outline: none;
+}
+.btn {
+  background: linear-gradient(45deg, #ff6b9d, #ffa07a);
+  color: #fff;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.3em;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255,107,157,0.4);
+  transition: all 0.3s;
+  font-weight: bold;
+}
+.btn:hover { transform: translateY(-3px) scale(1.05); }
+.btn.green { background: linear-gradient(45deg, #56ab2f, #a8e063); }
+
+.grid-info {
+  text-align: center;
+  color: #fff;
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 15px;
+  padding: 20px;
+}
+.cell {
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #fff, #ffe0b2);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #ff6b9d;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s;
+  border: 4px solid #fff;
+  position: relative;
+}
+.cell:hover { transform: scale(1.1) rotate(-3deg); background: linear-gradient(135deg, #ffd1dc, #ffb3ba); }
+.cell.used {
+  background: linear-gradient(135deg, #a8e063, #56ab2f);
+  color: #fff;
+  cursor: not-allowed;
+}
+.cell.used::after {
+  content: "✓";
+  position: absolute;
+  font-size: 1.5em;
+  top: 5px;
+  left: 5px;
+}
+
+.question-box {
+  background: #fff;
+  border-radius: 30px;
+  padding: 30px;
+  max-width: 800px;
+  margin: 30px auto;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  text-align: center;
+  border: 5px solid #4ecdc4;
+}
+.question-box h2 { color: #4ecdc4; margin-bottom: 15px; font-size: 1.8em; }
+
+.question-type-badge {
+  display: inline-block;
+  background: linear-gradient(45deg, #ff6b9d, #ffa07a);
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 1em;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.emoji-display {
+  font-size: 5em;
+  margin: 25px 0;
+  padding: 30px;
+  background: linear-gradient(135deg, #fff8e1, #ffecb3);
+  border-radius: 25px;
+  border: 4px dashed #ffa07a;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  animation: popEmoji 0.6s;
+}
+@keyframes popEmoji {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.emoji-display span {
+  display: inline-block;
+  animation: wiggle 1s ease-in-out infinite;
+}
+.emoji-display span:nth-child(2) { animation-delay: 0.1s; }
+.emoji-display span:nth-child(3) { animation-delay: 0.2s; }
+.emoji-display span:nth-child(4) { animation-delay: 0.3s; }
+.emoji-display span:nth-child(5) { animation-delay: 0.4s; }
+@keyframes wiggle {
+  0%,100% { transform: rotate(0); }
+  25% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+}
+
+.listen-btn {
+  background: linear-gradient(45deg, #4ecdc4, #44a3aa);
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 1.3em;
+  border-radius: 30px;
+  cursor: pointer;
+  margin: 15px 0;
+  box-shadow: 0 5px 15px rgba(78,205,196,0.4);
+  font-weight: bold;
+  animation: pulseBtn 2s infinite;
+}
+@keyframes pulseBtn {
+  0%,100% { transform: scale(1); box-shadow: 0 5px 15px rgba(78,205,196,0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(78,205,196,0.7); }
+}
+.listen-btn:hover { transform: scale(1.1); }
+
+.speaking-indicator {
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.5em;
+  animation: speakAnim 0.8s infinite;
+}
+@keyframes speakAnim {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}
+
+.options-visual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+.option-visual {
+  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+  color: #fff;
+  padding: 20px 10px;
+  font-size: 1.3em;
+  border-radius: 25px;
+  cursor: pointer;
+  border: 4px solid #fff;
+  font-weight: bold;
+  transition: all 0.3s;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.option-visual .opt-icon { font-size: 2.5em; }
+.option-visual .opt-emoji { font-size: 2.5em; letter-spacing: 2px; }
+.option-visual:hover { transform: translateY(-5px) scale(1.05); }
+.option-visual.mufrad { background: linear-gradient(135deg, #4ecdc4, #44a3aa); }
+.option-visual.muthanna { background: linear-gradient(135deg, #ff9800, #ffc107); }
+.option-visual.jam3 { background: linear-gradient(135deg, #ff6b9d, #ff4081); }
+.option-visual.correct { background: linear-gradient(135deg, #56ab2f, #a8e063) !important; animation: pulse 0.5s; }
+.option-visual.wrong { background: linear-gradient(135deg, #ff6b6b, #ee5a6f) !important; animation: shake 0.5s; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-10px);} 75%{transform:translateX(10px);} }
+
+.celebration-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 90;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.celebration-overlay.show { display: flex; }
+.result-box {
+  background: #fff;
+  border-radius: 30px;
+  padding: 40px;
+  max-width: 550px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  animation: popIn 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+@keyframes popIn { from {transform:scale(0) rotate(-180deg);} to {transform:scale(1) rotate(0);} }
+.result-box.success { border: 6px solid #56ab2f; background: linear-gradient(135deg, #fff, #e8f5e9); }
+.result-box.try-again { border: 6px solid #ff9800; background: linear-gradient(135deg, #fff, #fff3e0); }
+.result-emoji { font-size: 5em; margin-bottom: 15px; animation: bounce 1s infinite; }
+.result-title { font-size: 2.2em; color: #ff6b9d; margin-bottom: 10px; font-weight: bold; }
+.result-text { font-size: 1.5em; color: #333; margin: 15px 0; font-weight: bold; }
+.student-name {
+  display: inline-block;
+  background: linear-gradient(45deg, #ff6b9d, #ffa07a);
+  color: #fff;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-size: 1.4em;
+  font-weight: bold;
+  margin: 10px 0;
+  animation: glow 1.5s infinite alternate;
+}
+@keyframes glow {
+  from { box-shadow: 0 5px 15px rgba(255,107,157,0.4); }
+  to { box-shadow: 0 5px 25px rgba(255,107,157,0.8); }
+}
+.btn-group { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+
+.back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: #fff;
+  color: #ff6b9d;
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 3px solid #ff6b9d;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 50;
+}
+.back-btn:hover { background: #ff6b9d; color: #fff; }
+
+.confetti { position: fixed; width: 15px; height: 15px; top: -20px; z-index: 95; animation: fall 3s linear; pointer-events: none; }
+@keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+.balloon { position: fixed; bottom: -100px; font-size: 3em; z-index: 94; animation: floatUp 4s ease-out; pointer-events: none; }
+@keyframes floatUp { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-110vh); opacity: 0.7; } }
+.firework { position: fixed; width: 10px; height: 10px; border-radius: 50%; z-index: 93; animation: explode 1.5s ease-out; pointer-events: none; }
+@keyframes explode {
+  0% { transform: scale(0); opacity: 1; box-shadow: 0 0 0 0 currentColor; }
+  50% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 10px currentColor, 0 0 0 20px currentColor, 0 0 0 30px currentColor; }
+  100% { transform: scale(1.5); opacity: 0; box-shadow: 0 0 0 40px currentColor, 0 0 0 60px currentColor; }
+}
+.sparkle { position: fixed; font-size: 2em; z-index: 96; animation: sparkleAnim 2s ease-out; pointer-events: none; }
+@keyframes sparkleAnim { 0% { transform: scale(0); opacity: 0; } 50% { transform: scale(1.5) rotate(180deg); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+.emoji-float { position: fixed; font-size: 3em; z-index: 94; animation: emojiFloat 3s ease-out; pointer-events: none; }
+@keyframes emojiFloat { 0% { transform: translateY(0) scale(0); opacity: 0; } 20% { transform: translateY(-50px) scale(1.2); opacity: 1; } 100% { transform: translateY(-200px) scale(0.5); opacity: 0; } }
+
+@media (max-width: 600px) {
+  .grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .cell { font-size: 1.8em; }
+  h1 { font-size: 1.8em; }
+  .emoji-display { font-size: 3.5em; min-height: 140px; }
+  .options-visual { grid-template-columns: 1fr; }
+  .result-title { font-size: 1.6em; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎯 مسابقة المفرد والمثنى والجمع 🌟</h1>
+
+  <div id="nameScreen" class="screen active">
+    <div class="name-box">
+      <h2>👋 مرحباً يا بطل!</h2>
+      <p>اكتب اسمك لتحصل على سؤالك 🎁</p>
+      <input type="text" id="studentName" placeholder="اسمك هنا..." maxlength="20">
+      <br>
+      <button class="btn" onclick="startGame()">🚀 ابدأ</button>
+    </div>
+  </div>
+
+  <div id="gridScreen" class="screen">
+    <div class="grid-info">🎈 أهلاً <span id="displayName" style="color:#ffd700; font-weight:bold;"></span>! اختر رقماً 🎈</div>
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <div id="questionScreen" class="screen">
+    <button class="back-btn" onclick="backToName()">⬅️ طالب جديد</button>
+    <div class="question-box">
+      <div class="question-type-badge" id="qBadge">🤔 حدد نوع الكلمة</div>
+      <h2 id="qTitle">ما هذه الكلمة؟</h2>
+      <div class="emoji-display" id="emojiDisplay"></div>
+      <button class="listen-btn" onclick="speakQuestion()">
+        <span class="speaking-indicator" id="speakIcon" style="display:none;">🔊</span>
+        📢 استمع للسؤال
+      </button>
+      <div class="options-visual" id="qOptions"></div>
+    </div>
+  </div>
+</div>
+
+<div id="celebrationOverlay" class="celebration-overlay">
+  <div class="result-box" id="resultBox">
+    <div class="result-emoji" id="resEmoji">🎉</div>
+    <div class="result-title" id="resTitle"></div>
+    <div class="student-name" id="resName"></div>
+    <div class="result-text" id="resText"></div>
+    <div class="btn-group">
+      <button class="btn green" onclick="nextStudent()">👥 طالب جديد</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const femaleNames = [
+  'سارة','فاطمة','عائشة','مريم','نور','ليلى','هند','ريم','دانة','لمى',
+  'لينا','جوري','رنا','دانا','سمر','هدى','منى','لميس','رزان','نورة',
+  'حصة','لطيفة','عالية','سعاد','منال','أمل','هيا','العنود','الجوهرة','البندري',
+  'ريماس','يارا','تالا','ريتال','ليان','جنى','ملك','روان','جودي','سديم',
+  'أثير','لمار','ديمة','سجى','وفاء','إيمان','سلمى','زينب','خديجة','رقية',
+  'أسماء','هاجر','سارة','حور','شهد','غادة','نادية','سامية','هدى','نجلاء',
+  'منى','كوثر','تقوى','ورعة','عبلة','سكينة','ميساء','رهف','لجين','تولين',
+  'نورهان','يارا','سيلين','ديما','جود','لين','لارا','مايا','ريما','رزان',
+  'أروى','أسيل','غيداء','سلاف','دلال','ابتسام','ابتهاج','إحسان','أحلام','إلهام'
+];
+
+function isFemale(name) {
+  const cleanName = name.trim();
+  if (femaleNames.includes(cleanName)) return true;
+  if (cleanName.endsWith('ة') || cleanName.endsWith('ى') || cleanName.endsWith('ا')) return true;
+  const feminineEndings = ['هان','لين','ين'];
+  for (const end of feminineEndings) {
+    if (cleanName.endsWith(end)) return true;
+  }
+  return false;
+}
+
+// 🎯 بنك أسئلة متنوع جداً - أكثر من 60 سؤال بدون تكرار
+const questions = [
+  // ========== النوع 1: انظر وعدّد (أشياء متنوعة) ==========
+  // فواكه
+  {type:"identify", emoji:"🍎", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن تُفَّاحَة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🍎🍎", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن تُفَّاحَة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🍎🍎🍎🍎🍎", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن تُفَّاحَة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // موز
+  {type:"identify", emoji:"🍌", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن مَوْزَة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🍌🍌", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن مَوْزَة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🍌🍌🍌🍌🍌", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن مَوْزَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // حيوانات - قطط
+  {type:"identify", emoji:"🐱", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن قِطَّة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐱🐱", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن قِطَّة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐱🐱🐱🐱🐱", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن قِطَّة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // حيوانات - كلاب
+  {type:"identify", emoji:"🐕", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كَلْبٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐕🐕", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كَلْبٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐕🐕🐕🐕🐕", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كَلْبٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // أسماك
+  {type:"identify", emoji:"🐟", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن سَمَكَة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐟🐟", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن سَمَكَة؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐟🐟🐟🐟🐟", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن سَمَكَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // طيور
+  {type:"identify", emoji:"🐦", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن عُصْفُورٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐦🐦", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن عُصْفُورٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐦🐦🐦🐦🐦", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن عُصْفُورٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // ورود
+  {type:"identify", emoji:"🌹", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن وَرْدَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🌹🌹", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن وَرْدَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🌸🌸🌸🌸🌸", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن وَرْدَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // أشجار
+  {type:"identify", emoji:"🌳", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن شَجَرَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🌳🌳", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن شَجَرَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🌳🌳🌳🌳🌳", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن شَجَرَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // أقلام
+  {type:"identify", emoji:"✏️", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن قَلَمٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"✏️✏️", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن قَلَمٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"✏️✏️✏️✏️✏️", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن قَلَمٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // كتب
+  {type:"identify", emoji:"📖", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كِتَابٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"📖📖", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كِتَابٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"📖📖📖📖📖", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كِتَابٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // كرات
+  {type:"identify", emoji:"⚽", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كُرَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"⚽⚽", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كُرَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"⚽⚽⚽⚽⚽", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن كُرَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // نجوم
+  {type:"identify", emoji:"⭐", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن نَجْمَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"⭐⭐", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن نَجْمَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"⭐⭐⭐⭐⭐", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن نَجْمَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // بالونات
+  {type:"identify", emoji:"🎈", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن بالُونٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🎈🎈", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن بالُونٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🎈🎈🎈🎈🎈", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن بالُونٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // سيارات
+  {type:"identify", emoji:"🚗", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن سَيَّارَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🚗🚗", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن سَيَّارَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🚗🚗🚗🚗🚗", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن سَيَّارَةٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // أرانب
+  {type:"identify", emoji:"🐇", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن أَرْنَبٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐇🐇", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن أَرْنَبٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🐇🐇🐇🐇🐇", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن أَرْنَبٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // منازل
+  {type:"identify", emoji:"🏠", answer:"مفرد", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن بَيْتٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🏠🏠", answer:"مثنى", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن بَيْتٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  {type:"identify", emoji:"🏠🏠🏠🏠🏠", answer:"جمع", speakParts:["اُنْظُرْ هُنا", "كَمْ يُوجَدُ مِن بَيْتٍ؟", "هَلْ هَذا العَدَدُ مُفْرَدٌ أَمْ مُثَنَّى أَمْ جَمْع؟"], badge:"👀 اُنْظُرْ وَعَدِّد"},
+  
+  // ========== النوع 2: اختر المفرد (ترتيبات مختلفة) ==========
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"🍎🍎", label:"تُفَّاحَتان", answer:"مثنى"},
+      {emoji:"🍎", label:"تُفَّاحَة", answer:"مفرد"},
+      {emoji:"🍎🍎🍎🍎🍎", label:"تُفَّاح", answer:"جمع"}
+    ], correct:1},
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"📖📖📖📖📖", label:"كُتُب", answer:"جمع"},
+      {emoji:"📖📖", label:"كِتابان", answer:"مثنى"},
+      {emoji:"📖", label:"كِتاب", answer:"مفرد"}
+    ], correct:2},
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"🌹", label:"وَرْدَة", answer:"مفرد"},
+      {emoji:"🌸🌸🌸🌸🌸", label:"وُرُود", answer:"جمع"},
+      {emoji:"🌹🌹", label:"وَرْدَتان", answer:"مثنى"}
+    ], correct:0},
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"🐱🐱🐱🐱🐱", label:"قِطَط", answer:"جمع"},
+      {emoji:"🐱", label:"قِطَّة", answer:"مفرد"},
+      {emoji:"🐱🐱", label:"قِطَّتان", answer:"مثنى"}
+    ], correct:1},
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"⚽", label:"كُرَة", answer:"مفرد"},
+      {emoji:"⚽⚽⚽⚽⚽", label:"كُرَات", answer:"جمع"},
+      {emoji:"⚽⚽", label:"كُرَتان", answer:"مثنى"}
+    ], correct:0},
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"🚗🚗🚗🚗🚗", label:"سَيَّارات", answer:"جمع"},
+      {emoji:"🚗🚗", label:"سَيَّارَتان", answer:"مثنى"},
+      {emoji:"🚗", label:"سَيَّارَة", answer:"مفرد"}
+    ], correct:2},
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"🐟", label:"سَمَكَة", answer:"مفرد"},
+      {emoji:"🐟🐟", label:"سَمَكَتان", answer:"مثنى"},
+      {emoji:"🐟🐟🐟🐟🐟", label:"أَسْماك", answer:"جمع"}
+    ], correct:0},
+  {type:"find_mufrad", title:"اِخْتَر المُفْرَد", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُفْرَد مِن بَين الخِيارات"], badge:"☝️ اِخْتَر المُفْرَد",
+    options:[
+      {emoji:"🎈🎈", label:"بالُونان", answer:"مثنى"},
+      {emoji:"🎈", label:"بالُون", answer:"مفرد"},
+      {emoji:"🎈🎈🎈🎈🎈", label:"بَوالِين", answer:"جمع"}
+    ], correct:1},
+  
+  // ========== النوع 3: اختر المثنى ==========
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"✏️", label:"قَلَم", answer:"مفرد"},
+      {emoji:"✏️✏️", label:"قَلَمَان", answer:"مثنى"},
+      {emoji:"✏️✏️✏️✏️✏️", label:"أَقْلام", answer:"جمع"}
+    ], correct:1},
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"🌳🌳🌳🌳🌳", label:"أَشْجار", answer:"جمع"},
+      {emoji:"🌳🌳", label:"شَجَرَتان", answer:"مثنى"},
+      {emoji:"🌳", label:"شَجَرَة", answer:"مفرد"}
+    ], correct:1},
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"🐦🐦", label:"عُصْفُوران", answer:"مثنى"},
+      {emoji:"🐦", label:"عُصْفُور", answer:"مفرد"},
+      {emoji:"🐦🐦🐦🐦🐦", label:"عَصافِير", answer:"جمع"}
+    ], correct:0},
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"🐕", label:"كَلْب", answer:"مفرد"},
+      {emoji:"🐕🐕🐕🐕🐕", label:"كِلاب", answer:"جمع"},
+      {emoji:"🐕🐕", label:"كَلْبان", answer:"مثنى"}
+    ], correct:2},
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"⭐⭐", label:"نَجْمَتان", answer:"مثنى"},
+      {emoji:"⭐", label:"نَجْمَة", answer:"مفرد"},
+      {emoji:"⭐⭐⭐⭐⭐", label:"نُجُوم", answer:"جمع"}
+    ], correct:0},
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"🏠", label:"بَيْت", answer:"مفرد"},
+      {emoji:"🏠🏠", label:"بَيْتان", answer:"مثنى"},
+      {emoji:"🏠🏠🏠🏠🏠", label:"بُيُوت", answer:"جمع"}
+    ], correct:1},
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"🐇🐇🐇🐇🐇", label:"أَرانِب", answer:"جمع"},
+      {emoji:"🐇🐇", label:"أَرْنَبان", answer:"مثنى"},
+      {emoji:"🐇", label:"أَرْنَب", answer:"مفرد"}
+    ], correct:1},
+  {type:"find_muthanna", title:"اِخْتَر المُثَنَّى", speakParts:["اُنْظُرْ هُنا", "اِخْتَر المُثَنَّى مِن بَين الخِيارات"], badge:"✌️ اِخْتَر المُثَنَّى",
+    options:[
+      {emoji:"🍌🍌", label:"مَوْزَتان", answer:"مثنى"},
+      {emoji:"🍌", label:"مَوْزَة", answer:"مفرد"},
+      {emoji:"🍌🍌🍌🍌🍌", label:"مَوْز", answer:"جمع"}
+    ], correct:0},
+  
+  // ========== النوع 4: اختر الجمع ==========
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"🍎", label:"تُفَّاحَة", answer:"مفرد"},
+      {emoji:"🍎🍎", label:"تُفَّاحَتان", answer:"مثنى"},
+      {emoji:"🍎🍎🍎🍎🍎", label:"تُفَّاح", answer:"جمع"}
+    ], correct:2},
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"📖📖📖📖📖", label:"كُتُب", answer:"جمع"},
+      {emoji:"📖", label:"كِتاب", answer:"مفرد"},
+      {emoji:"📖📖", label:"كِتابان", answer:"مثنى"}
+    ], correct:0},
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"🌹🌹", label:"وَرْدَتان", answer:"مثنى"},
+      {emoji:"🌸🌸🌸🌸🌸", label:"وُرُود", answer:"جمع"},
+      {emoji:"🌹", label:"وَرْدَة", answer:"مفرد"}
+    ], correct:1},
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"🐱", label:"قِطَّة", answer:"مفرد"},
+      {emoji:"🐱🐱", label:"قِطَّتان", answer:"مثنى"},
+      {emoji:"🐱🐱🐱🐱🐱", label:"قِطَط", answer:"جمع"}
+    ], correct:2},
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"⚽⚽⚽⚽⚽", label:"كُرَات", answer:"جمع"},
+      {emoji:"⚽", label:"كُرَة", answer:"مفرد"},
+      {emoji:"⚽⚽", label:"كُرَتان", answer:"مثنى"}
+    ], correct:0},
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"🚗", label:"سَيَّارَة", answer:"مفرد"},
+      {emoji:"🚗🚗", label:"سَيَّارَتان", answer:"مثنى"},
+      {emoji:"🚗🚗🚗🚗🚗", label:"سَيَّارات", answer:"جمع"}
+    ], correct:2},
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"🐟🐟🐟🐟🐟", label:"أَسْماك", answer:"جمع"},
+      {emoji:"🐟🐟", label:"سَمَكَتان", answer:"مثنى"},
+      {emoji:"🐟", label:"سَمَكَة", answer:"مفرد"}
+    ], correct:0},
+  {type:"find_jam3", title:"اِخْتَر الجَمْع", speakParts:["اُنْظُرْ هُنا", "اِخْتَر الجَمْع مِن بَين الخِيارات"], badge:"🖐️ اِخْتَر الجَمْع",
+    options:[
+      {emoji:"🎈🎈", label:"بالُونان", answer:"مثنى"},
+      {emoji:"🎈🎈🎈🎈🎈", label:"بَوالِين", answer:"جمع"},
+      {emoji:"🎈", label:"بالُون", answer:"مفرد"}
+    ], correct:1}
+];
+
+let studentName = "";
+let studentIsFemale = false;
+let currentQ = 0;
+let usedQuestions = [];
+let usedCells = [];
+let lastCellIndex = -1;
+let bestVoice = null;
+
+function initVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  if (voices.length === 0) return;
+  
+  const priorities = [
+    v => v.name.includes('Google') && v.lang === 'ar-SA',
+    v => v.name === 'Maged' && v.lang === 'ar-SA',
+    v => v.name.includes('Laila'),
+    v => v.name.includes('Hala') && v.lang.startsWith('ar'),
+    v => v.name.includes('Microsoft') && v.lang.startsWith('ar') && v.name.includes('Hamed'),
+    v => v.name.includes('Naayf'),
+    v => v.lang === 'ar-SA',
+    v => v.lang.startsWith('ar')
+  ];
+  
+  for (const check of priorities) {
+    const found = voices.find(check);
+    if (found) {
+      bestVoice = found;
+      console.log('🎤 أفضل صوت:', found.name);
+      return;
+    }
+  }
+}
+
+if ('speechSynthesis' in window) {
+  window.speechSynthesis.onvoiceschanged = initVoices;
+  setTimeout(initVoices, 200);
+  setTimeout(initVoices, 1000);
+  setTimeout(initVoices, 2000);
+}
+
+function speak(text, onEnd=null) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ar-SA';
+  utter.rate = 0.75;
+  utter.pitch = 0.95;
+  utter.volume = 0.95;
+  
+  if (bestVoice) utter.voice = bestVoice;
+  
+  const icon = document.getElementById('speakIcon');
+  utter.onstart = () => { if (icon) icon.style.display = 'inline-block'; };
+  utter.onend = () => {
+    if (icon) icon.style.display = 'none';
+    if (onEnd) onEnd();
+  };
+  utter.onerror = () => { if (icon) icon.style.display = 'none'; };
+  
+  window.speechSynthesis.speak(utter);
+}
+
+function speakSequence(parts, pauseDuration = 1000, onEnd=null) {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  
+  let currentIndex = 0;
+  
+  function speakNext() {
+    if (currentIndex >= parts.length) {
+      if (onEnd) onEnd();
+      return;
+    }
+    
+    const utter = new SpeechSynthesisUtterance(parts[currentIndex]);
+    utter.lang = 'ar-SA';
+    utter.rate = 0.75;
+    utter.pitch = 0.95;
+    utter.volume = 0.95;
+    
+    if (bestVoice) utter.voice = bestVoice;
+    
+    const icon = document.getElementById('speakIcon');
+    utter.onstart = () => { if (icon) icon.style.display = 'inline-block'; };
+    utter.onend = () => {
+      currentIndex++;
+      if (currentIndex < parts.length) {
+        if (icon) icon.style.display = 'none';
+        setTimeout(speakNext, pauseDuration);
+      } else {
+        if (icon) icon.style.display = 'none';
+        if (onEnd) onEnd();
+      }
+    };
+    utter.onerror = () => {
+      currentIndex++;
+      if (currentIndex < parts.length) {
+        setTimeout(speakNext, pauseDuration);
+      } else {
+        if (icon) icon.style.display = 'none';
+        if (onEnd) onEnd();
+      }
+    };
+    
+    window.speechSynthesis.speak(utter);
+  }
+  
+  speakNext();
+}
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playTone(freq, duration, type='sine', volume=0.3) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(); osc.stop(audioCtx.currentTime + duration);
+}
+function playSuccess() {
+  const notes = [523, 659, 784, 1047];
+  notes.forEach((n, i) => setTimeout(() => playTone(n, 0.3, 'triangle', 0.25), i*120));
+  setTimeout(() => playTone(1047, 0.5, 'sine', 0.3), 500);
+}
+function playTryAgain() {
+  playTone(392, 0.2, 'sine', 0.2);
+  setTimeout(() => playTone(440, 0.3, 'sine', 0.2), 200);
+}
+function playClick() { playTone(800, 0.05, 'square', 0.1); }
+
+function startGame() {
+  const name = document.getElementById('studentName').value.trim();
+  if (!name) { alert('اكتب اسمك أولاً يا بطل! 🌟'); return; }
+  studentName = name;
+  studentIsFemale = isFemale(name);
+  document.getElementById('displayName').textContent = name;
+  showScreen('gridScreen');
+  buildGrid();
+  playClick();
+  // ✅ الترحيب المختصر: "أهلاً يا [الاسم]" فقط
+  setTimeout(() => speak(`أَهْلاً يا ${name}`), 400);
+}
+
+function buildGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 20; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell' + (usedCells.includes(i) ? ' used' : '');
+    cell.textContent = i + 1;
+    cell.onclick = () => pickCell(i, cell);
+    grid.appendChild(cell);
+  }
+}
+
+function pickCell(index, cell) {
+  if (cell.classList.contains('used')) return;
+  lastCellIndex = index;
+  let available = [];
+  for (let i = 0; i < questions.length; i++) {
+    if (!usedQuestions.includes(i)) available.push(i);
+  }
+  if (available.length === 0) { usedQuestions = []; available = questions.map((_,i)=>i); }
+  currentQ = available[Math.floor(Math.random() * available.length)];
+  usedQuestions.push(currentQ);
+  showQuestion();
+  playClick();
+}
+
+function showQuestion() {
+  const q = questions[currentQ];
+  const badge = document.getElementById('qBadge');
+  const title = document.getElementById('qTitle');
+  const display = document.getElementById('emojiDisplay');
+  const opts = document.getElementById('qOptions');
+  
+  badge.textContent = q.badge;
+  display.innerHTML = '';
+  opts.innerHTML = '';
+  
+  if (q.type === "identify") {
+    title.textContent = "اُنْظُرْ هُنا وَجاوِب";
+    const emojis = [...q.emoji];
+    emojis.forEach(e => {
+      const span = document.createElement('span');
+      span.textContent = e;
+      display.appendChild(span);
+    });
+    
+    const choices = [
+      {label:"مُفْرَد", speak:"مُفْرَد", icon:"☝️", cls:"mufrad", value:"مفرد"},
+      {label:"مُثَنَّى", speak:"مُثَنَّى", icon:"✌️", cls:"muthanna", value:"مثنى"},
+      {label:"جَمْع", speak:"جَمْع", icon:"🖐️", cls:"jam3", value:"جمع"}
+    ];
+    
+    choices.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'option-visual ' + choice.cls;
+      btn.innerHTML = `<div class="opt-icon">${choice.icon}</div><div>${choice.label}</div>`;
+      btn.onclick = () => checkAnswer(choice.value, btn, choice.speak);
+      btn.onmouseenter = () => speak(choice.speak);
+      opts.appendChild(btn);
+    });
+  } else {
+    title.textContent = q.title;
+    display.style.display = 'none';
+    
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      const cls = opt.answer === "مفرد" ? "mufrad" : opt.answer === "مثنى" ? "muthanna" : "jam3";
+      btn.className = 'option-visual ' + cls;
+      btn.innerHTML = `<div class="opt-emoji">${opt.emoji}</div><div>${opt.label}</div>`;
+      btn.onclick = () => {
+        checkAnswer(i === q.correct ? "correct" : "wrong", btn, opt.label);
+        if (i !== q.correct) {
+          setTimeout(() => {
+            const allBtns = document.querySelectorAll('.option-visual');
+            allBtns[q.correct].classList.add('correct');
+          }, 500);
+        }
+      };
+      btn.onmouseenter = () => speak(opt.label);
+      opts.appendChild(btn);
+    });
+  }
+  
+  if (q.type === "identify") display.style.display = 'flex';
+  
+  showScreen('questionScreen');
+  setTimeout(() => speakQuestion(), 600);
+}
+
+function speakQuestion() {
+  const q = questions[currentQ];
+  speakSequence(q.speakParts, 1000);
+}
+
+function checkAnswer(selected, btn, spokenWord) {
+  const q = questions[currentQ];
+  const allBtns = document.querySelectorAll('.option-visual');
+  allBtns.forEach(b => b.onclick = null);
+  
+  let isCorrect = false;
+  
+  if (q.type === "identify") {
+    isCorrect = (selected === q.answer);
+  } else {
+    isCorrect = (selected === "correct");
+  }
+  
+  speak(spokenWord);
+  
+  if (isCorrect) {
+    btn.classList.add('correct');
+    setTimeout(() => showResult(true), 900);
+  } else {
+    btn.classList.add('wrong');
+    setTimeout(() => showResult(false), 1400);
+  }
+}
+
+function showResult(success) {
+  const overlay = document.getElementById('celebrationOverlay');
+  const box = document.getElementById('resultBox');
+  const emoji = document.getElementById('resEmoji');
+  const title = document.getElementById('resTitle');
+  const text = document.getElementById('resText');
+  const name = document.getElementById('resName');
+  
+  name.textContent = `🌟 ${studentName} 🌟`;
+  
+  if (success) {
+    box.className = 'result-box success';
+    emoji.textContent = ['🎉','🏆','⭐','🌟','🎊','🥳'][Math.floor(Math.random()*6)];
+    playSuccess();
+    launchCelebration();
+    
+    if (studentIsFemale) {
+      const titles = ["أَحْسَنْتِ!", "مُمْتَازَة!", "رائِعَة جِدّاً!", "بَطَلَة!", "عَبْقَرِيَّة!"];
+      const msgs = [`إِجابَة رائِعَة!`,`أَنْتِ نَجْمَة!`,`أَصَبْتِ! اِسْتَمِرِّي!`,`مُمْتَازَة!`,`أَنْتِ بَطَلَة!`];
+      title.textContent = titles[Math.floor(Math.random()*titles.length)];
+      text.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+      setTimeout(() => speak(`أَحْسَنْتِ يا ${studentName}! إِجابَة رائِعَة! أَنْتِ نَجْمَة!`), 600);
+    } else {
+      const titles = ["أَحْسَنْتَ!", "مُمْتَاز!", "رائِع جِدّاً!", "بَطَل!", "عَبْقَرِي!"];
+      const msgs = [`إِجابَة رائِعَة!`,`أَنْتَ نَجْم!`,`أَصَبْتَ! اِسْتَمِر!`,`مُمْتَاز!`,`أَنْتَ بَطَل!`];
+      title.textContent = titles[Math.floor(Math.random()*titles.length)];
+      text.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+      setTimeout(() => speak(`أَحْسَنْتَ يا ${studentName}! إِجابَة رائِعَة! أَنْتَ نَجْم!`), 600);
+    }
+    
+    if (lastCellIndex >= 0 && !usedCells.includes(lastCellIndex)) {
+      usedCells.push(lastCellIndex);
+    }
+  } else {
+    box.className = 'result-box try-again';
+    emoji.textContent = ['💪','🌈','🤗','✨','🎈'][Math.floor(Math.random()*5)];
+    playTryAgain();
+    launchGentleCelebration();
+    
+    const q = questions[currentQ];
+    let correctSpeak = "";
+    if (q.type === "identify") {
+      correctSpeak = q.answer === "مفرد" ? "مُفْرَد" : q.answer === "مثنى" ? "مُثَنَّى" : "جَمْع";
+    } else {
+      correctSpeak = q.options[q.correct].label;
+    }
+    
+    if (studentIsFemale) {
+      const titles = ["لا بَأْس!", "حاوِلي مُجَدَّداً!", "أَنْتِ قادِرَة!"];
+      const msgs = [`لا بَأْس، حاوِلي مَرَّة أُخرى`,`أَنْتِ قَريبَة!`,`لا تَسْتَسْلمي!`];
+      title.textContent = titles[Math.floor(Math.random()*titles.length)];
+      text.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+      
+      setTimeout(() => {
+        speakSequence([
+          "الإِجابَة غَيْر صَحِيحَة",
+          `الإِجابَة الصَّحِيحَة هِيَ: ${correctSpeak}`
+        ], 1000);
+      }, 600);
+    } else {
+      const titles = ["لا بَأْس!", "حاوِل مُجَدَّداً!", "أَنْتَ قادِر!"];
+      const msgs = [`لا بَأْس، حاوِل مَرَّة أُخرى`,`أَنْتَ قَريب!`,`لا تَسْتَسْلِمْ!`];
+      title.textContent = titles[Math.floor(Math.random()*titles.length)];
+      text.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+      
+      setTimeout(() => {
+        speakSequence([
+          "الإِجابَة غَيْر صَحِيحَة",
+          `الإِجابَة الصَّحِيحَة هِيَ: ${correctSpeak}`
+        ], 1000);
+      }, 600);
+    }
+  }
+  
+  overlay.classList.add('show');
+}
+
+function launchCelebration() {
+  launchConfetti();
+  launchBalloons();
+  launchFireworks();
+  launchSparkles();
+  launchEmojis();
+}
+
+function launchGentleCelebration() {
+  launchBalloons(5);
+  launchSparkles(5);
+}
+
+function launchConfetti() {
+  const colors = ['#ff6b9d','#4ecdc4','#ffd93d','#a18cd1','#ff9a76','#56ab2f','#ff4081','#00bcd4'];
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random()*colors.length)];
+      c.style.animationDuration = (2 + Math.random()*2) + 's';
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      c.style.width = (8 + Math.random()*10) + 'px';
+      c.style.height = (8 + Math.random()*10) + 'px';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4500);
+    }, i * 30);
+  }
+}
+
+function launchBalloons(count = 12) {
+  const balloons = ['🎈','🎈','🎈','🎁','🎀'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const b = document.createElement('div');
+      b.className = 'balloon';
+      b.textContent = balloons[Math.floor(Math.random()*balloons.length)];
+      b.style.left = Math.random() * 100 + 'vw';
+      b.style.animationDuration = (3 + Math.random()*2) + 's';
+      b.style.filter = `hue-rotate(${Math.random()*360}deg)`;
+      document.body.appendChild(b);
+      setTimeout(() => b.remove(), 5000);
+    }, i * 200);
+  }
+}
+
+function launchFireworks() {
+  const colors = ['#ff006e','#fb5607','#ffbe0b','#8338ec','#3a86ff','#06ffa5'];
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const f = document.createElement('div');
+      f.className = 'firework';
+      f.style.left = (10 + Math.random()*80) + 'vw';
+      f.style.top = (10 + Math.random()*60) + 'vh';
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      f.style.background = color;
+      f.style.color = color;
+      document.body.appendChild(f);
+      setTimeout(() => f.remove(), 1500);
+    }, i * 300);
+  }
+}
+
+function launchSparkles(count = 15) {
+  const sparkles = ['✨','⭐','🌟','💫'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      s.textContent = sparkles[Math.floor(Math.random()*sparkles.length)];
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDuration = (1.5 + Math.random()) + 's';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 2500);
+    }, i * 150);
+  }
+}
+
+function launchEmojis() {
+  const emojis = ['🎉','🎊','🥳','🏆','🎁','🎀','🌈','💖','🦄','🍭'];
+  for (let i = 0; i < 10; i++) {
+    setTimeout(() => {
+      const e = document.createElement('div');
+      e.className = 'emoji-float';
+      e.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      e.style.left = Math.random() * 90 + 5 + 'vw';
+      e.style.top = (60 + Math.random()*30) + 'vh';
+      document.body.appendChild(e);
+      setTimeout(() => e.remove(), 3000);
+    }, i * 200);
+  }
+}
+
+function nextStudent() {
+  window.speechSynthesis.cancel();
+  document.getElementById('celebrationOverlay').classList.remove('show');
+  document.getElementById('studentName').value = '';
+  showScreen('nameScreen');
+  buildGrid();
+  playClick();
+}
+
+function backToName() {
+  window.speechSynthesis.cancel();
+  document.getElementById('studentName').value = '';
+  showScreen('nameScreen');
+  buildGrid();
+  playClick();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
